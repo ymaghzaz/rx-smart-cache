@@ -34,17 +34,18 @@ const partner3 = params =>
 const store = {};
 const notification = {};
 
-const startResolve = (promise, promiseId) => {
-  if (!store[promiseId]) {
-    store[promiseId] = promise;
-    notification[promiseId] = new BehaviorSubject({
+const dispatch = (id, obs) => {
+  if (!store[id]) {
+    store[id] = obs;
+    notification[id] = new BehaviorSubject({
       data: null,
+      error: null,
       state: "Init"
     });
   }
 };
 
-const resolvePromise = () => {
+const buildCache = () => {
   const startSubscibtion = {};
   const startProcessing$ = (key, obs) => {
     return obs.pipe(
@@ -68,7 +69,7 @@ const resolvePromise = () => {
   );
 };
 
-const startRequest = dataStream$ => {
+const processStreamCache = dataStream$ => {
   dataStream$.subscribe(datam => {
     const keys = Object.keys(datam);
     console.log(datam, keys);
@@ -79,34 +80,44 @@ const startRequest = dataStream$ => {
     });
   });
 };
-startResolve(partner1(), "partner1");
-startResolve(partner2(), "partner2");
-startResolve(partner1(), "partner1");
-startResolve(partner2(), "partner2");
+dispatch("partner1", partner1());
+dispatch("partner2", partner2());
+dispatch("partner1", partner1());
+dispatch("partner2", partner2());
+dispatch("partner1", partner1());
+dispatch("partner2", partner2());
+dispatch("partner1", partner1());
+dispatch("partner2", partner2());
 
-const dataStream$ = resolvePromise();
-startRequest(dataStream$);
+const streamCache$ = buildCache();
+processStreamCache(streamCache$);
 
 setTimeout(async () => {
-  notification.partner1.subscribe(b => {
-    console.log("b", b);
+  notification.partner1.subscribe(partner1_data => {
+    if (partner1_data.state === "End") {
+      console.log("partner1_data", partner1_data);
+    }
   });
 }, 2000);
 
 setTimeout(() => {
   const start = Date.now();
-  notification.partner2.subscribe(sss => {
-    const end = Date.now();
-    console.log("after", (end - start) / 1000, " second");
-    console.log("sss 2", sss);
+  notification.partner2.subscribe(partner2_data => {
+    if (partner2_data.state === "End") {
+      const end = Date.now();
+      console.log("after", (end - start) / 1000, " second");
+      console.log("partner2_data", partner2_data);
+    }
   });
 }, 2200);
 
 setTimeout(() => {
   const start = Date.now();
-  notification.partner1.subscribe(sss => {
-    const end = Date.now();
-    console.log("after", (end - start) / 1000, " second");
-    console.log("sss 3 ", sss);
+  notification.partner1.subscribe(partner1_data => {
+    if (partner1_data.state === "End") {
+      const end = Date.now();
+      console.log("after", (end - start) / 1000, " second");
+      console.log("partner1_data", partner1_data);
+    }
   });
 }, 5000);
