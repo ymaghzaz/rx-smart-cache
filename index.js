@@ -127,6 +127,16 @@ setTimeout(() => {
 
 setTimeout(() => {
   const start = Date.now();
+  notification[getId("partner2", 1)].subscribe(partner2_data => {
+    if (partner2_data.state === "End") {
+      const end = Date.now();
+      console.log("after", (end - start) / 1000, " second");
+      console.log("partner2_data", partner2_data);
+    }
+  });
+}, 2200);
+setTimeout(() => {
+  const start = Date.now();
   notification[getId("partner1")].subscribe(partner1_data => {
     if (partner1_data.state === "End") {
       const end = Date.now();
