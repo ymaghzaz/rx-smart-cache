@@ -39,25 +39,26 @@ const rxRequest = (partnerFunction, partnerResource, params) => {
   });
 };
 
-const partner1 = {
-  resourceName: "https://api.github.com/repos/ysfmag/advanced-react",
-  stream: rxRequest(
-    partnerRequest,
-    "https://api.github.com/repos/ysfmag/advanced-react",
-    {}
-  ),
-  params: {}
+//
+const buildPartnerRequest = (partnerFunction, resourceName, params) => {
+  return {
+    resourceName,
+    stream: rxRequest(partnerFunction, resourceName, params),
+    params
+  };
 };
 
-const partner2 = {
-  resourceName: "https://api.github.com/repos/ysfmag/amplify-js",
-  stream: rxRequest(
-    partnerRequest,
-    "https://api.github.com/repos/ysfmag/amplify-js",
-    {}
-  ),
-  params: {}
-};
+const partner1 = buildPartnerRequest(
+  partnerRequest,
+  "https://api.github.com/repos/ysfmag/advanced-react",
+  {}
+);
+
+const partner2 = buildPartnerRequest(
+  partnerRequest,
+  "https://api.github.com/repos/ysfmag/amplify-js",
+  {}
+);
 
 var partner1$ = dispatch(
   partner1.resourceName,
