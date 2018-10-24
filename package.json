@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "@octokit/rest": "^15.15.1",
     "crypto": "^1.0.1",
+    "request": "^2.88.0",
     "rxjs": "^6.3.3"
   }
 }

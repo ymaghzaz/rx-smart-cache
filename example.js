@@ -6,11 +6,16 @@ const {
   BehaviorSubject,
   Observable
 } = require("rxjs");
+const Background = {
+  blue: "\x1b[44m%s\x1b[41m",
+  yellow: "\x1b[33m%s\x1b[0m"
+};
 const { map, filter, flatMap, mergeMap } = require("rxjs/operators");
 const { callResources, initStreamCache, dispatch } = require("./index");
 const partner1 = params =>
   new Observable(obs => {
     console.log(
+      Background.yellow,
       `==========================called p1 with   ${JSON.stringify(
         params
       )} ======================`
@@ -23,6 +28,7 @@ const partner1 = params =>
 const partner2 = params =>
   new Observable(obs => {
     console.log(
+      Background.yellow,
       `==============================called p2 with  ${JSON.stringify(
         params
       )} ======================`
@@ -35,6 +41,7 @@ const partner2 = params =>
 const partner3 = params =>
   new Observable(obs => {
     console.log(
+      Background.yellow,
       `==============================called p3 with  ${JSON.stringify(
         params
       )} ======================`
