@@ -7,34 +7,17 @@ const {
   Observable
 } = require("rxjs");
 const { map, filter, flatMap, mergeMap } = require("rxjs/operators");
-
-const partner1 = params =>
-  new Observable(obs => {
-    setTimeout(() => {
-      obs.next(` data from partner1  ${params}`);
-    }, 1000);
-  });
-
-const partner2 = params =>
-  new Observable(obs => {
-    setTimeout(() => {
-      obs.next(` data from partner2  ${params}`);
-    }, 10000);
-  });
-
-const partner3 = params =>
-  from(
-    new Promise((resolve, reject) =>
-      setTimeout(() => {
-        resolve(` data from partner3  ${params}`);
-      }, 5000)
-    )
-  );
+const generateID = require("./generateID");
 
 const store = {};
 const notification = {};
 
-const dispatch = (id, obs) => {
+const getId = (obsId, params) => {
+  return generateID({ obsId, params });
+};
+
+const dispatch = (obsId, obs, params) => {
+  const id = getId(obsId, params);
   if (!store[id]) {
     store[id] = obs;
     notification[id] = new BehaviorSubject({
@@ -43,9 +26,10 @@ const dispatch = (id, obs) => {
       state: "Init"
     });
   }
+  return notification[id];
 };
 
-const buildCache = () => {
+const initStreamCache = () => {
   const startSubscibtion = {};
   const startProcessing$ = (key, obs) => {
     return obs.pipe(
@@ -69,7 +53,7 @@ const buildCache = () => {
   );
 };
 
-const processStreamCache = dataStream$ => {
+const callResources = dataStream$ => {
   dataStream$.subscribe(datam => {
     const keys = Object.keys(datam);
     console.log(datam, keys);
@@ -80,44 +64,9 @@ const processStreamCache = dataStream$ => {
     });
   });
 };
-dispatch("partner1", partner1());
-dispatch("partner2", partner2());
-dispatch("partner1", partner1());
-dispatch("partner2", partner2());
-dispatch("partner1", partner1());
-dispatch("partner2", partner2());
-dispatch("partner1", partner1());
-dispatch("partner2", partner2());
 
-const streamCache$ = buildCache();
-processStreamCache(streamCache$);
-
-setTimeout(async () => {
-  notification.partner1.subscribe(partner1_data => {
-    if (partner1_data.state === "End") {
-      console.log("partner1_data", partner1_data);
-    }
-  });
-}, 2000);
-
-setTimeout(() => {
-  const start = Date.now();
-  notification.partner2.subscribe(partner2_data => {
-    if (partner2_data.state === "End") {
-      const end = Date.now();
-      console.log("after", (end - start) / 1000, " second");
-      console.log("partner2_data", partner2_data);
-    }
-  });
-}, 2200);
-
-setTimeout(() => {
-  const start = Date.now();
-  notification.partner1.subscribe(partner1_data => {
-    if (partner1_data.state === "End") {
-      const end = Date.now();
-      console.log("after", (end - start) / 1000, " second");
-      console.log("partner1_data", partner1_data);
-    }
-  });
-}, 5000);
+module.exports = {
+  callResources,
+  initStreamCache,
+  dispatch
+};
