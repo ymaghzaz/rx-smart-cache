@@ -56,7 +56,6 @@ const initStreamCache = () => {
 const callResources = dataStream$ => {
   dataStream$.subscribe(datam => {
     const keys = Object.keys(datam);
-    console.log(datam, keys);
     keys.map(key => {
       datam[key].subscribe(info => {
         notification[key].next({ data: info, state: "End" });
