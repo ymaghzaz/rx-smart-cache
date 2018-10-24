@@ -1,7 +1,7 @@
 # rx-smart-cache
 
 ## Usage
-smart cache service for javascript
+Smart cache service for javascript.
 
 # Example
 
