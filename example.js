@@ -51,21 +51,38 @@ const partner3 = params =>
     }, 5000);
   });
 
-const p10 = dispatch("partner1", partner1(0), 0);
+const p10 = dispatch({
+  resourceName: "partner1",
+  stream: partner1(0),
+  params: 0
+});
 
 // deplucat call to partner 1 with the params 0
-const dp10 = dispatch("partner1", partner1(0), 0);
-dispatch("partner1", partner1(0), 0);
-dispatch("partner1", partner1(0), 0);
-dispatch("partner1", partner1(0), 0);
-dispatch("partner1", partner1(0), 0);
-dispatch("partner1", partner1(0), 0);
-dispatch("partner1", partner1(0), 0);
-dispatch("partner1", partner1(0), 0);
+const dp10 = dispatch({
+  resourceName: "partner1",
+  stream: partner1(0),
+  params: 0
+});
+dispatch({ resourceName: "partner1", stream: partner1(0), params: 0 });
+dispatch({ resourceName: "partner1", stream: partner1(0), params: 0 });
+dispatch({ resourceName: "partner1", stream: partner1(0), params: 0 });
+
 //other call
-const p20 = dispatch("partner2", partner2(0), 0);
-const p11 = dispatch("partner1", partner1(1), 1);
-const p21 = dispatch("partner2", partner2(1), 1);
+const p20 = dispatch({
+  resourceName: "partner2",
+  stream: partner2(0),
+  params: 0
+});
+const p11 = dispatch({
+  resourceName: "partner1",
+  stream: partner1(1),
+  params: 1
+});
+const p21 = dispatch({
+  resourceName: "partner2",
+  stream: partner2(1),
+  params: 1
+});
 
 const streamCache$ = initStreamCache();
 callResources(streamCache$);

@@ -8,7 +8,11 @@ const {
 } = require("rxjs");
 const { map, filter, flatMap, mergeMap } = require("rxjs/operators");
 const generateID = require("./generateID");
-
+const Background = {
+  blue: "\x1b[44m%s\x1b[0m",
+  yellow: "\x1b[33m%s\x1b[0m",
+  red: "\x1b[41m"
+};
 const store = {};
 const notification = {};
 
@@ -16,7 +20,7 @@ const getId = (obsId, params) => {
   return generateID({ obsId, params });
 };
 
-const dispatch = (obsId, obs, params) => {
+const dispatch = ({ resourceName: obsId, stream: obs, params }) => {
   const id = getId(obsId, params);
   if (!store[id]) {
     store[id] = obs;
@@ -64,8 +68,28 @@ const callResources = dataStream$ => {
   });
 };
 
+const rxRequest = (partnerFunction, partnerResource, params) => {
+  return new Observable(obs => {
+    console.log(Background.red, "Called ");
+    console.log(Background.yellow, partnerResource);
+    partnerFunction(partnerResource, params, data => {
+      console.log("partnerResource", data);
+      obs.next(data);
+    });
+  });
+};
+
+const buildPartnerRequest = (partnerFunction, resourceName, params) => {
+  return {
+    resourceName,
+    stream: rxRequest(partnerFunction, resourceName, params),
+    params
+  };
+};
+
 module.exports = {
   callResources,
   initStreamCache,
+  buildPartnerRequest,
   dispatch
 };
