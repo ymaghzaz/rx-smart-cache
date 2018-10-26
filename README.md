@@ -13,12 +13,9 @@ npm i
 node callApi.js
 ```
 
-# Example
+# Example Observable
 
 ```bash
-git clone https://github.com/ysfmag/rx-smart-cache.git
-cd rx-smart-cache
-npm i
 node example.js
 ```
 
