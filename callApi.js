@@ -54,6 +54,18 @@ var partner2$ = dispatch(partner2);
 const streamCache$ = initStreamCache();
 callResources(streamCache$);
 
+var partner3 = buildPartnerRequest(
+  partnerRequest,
+  "https://api.github.com/repos/ysfmag/amplify-js",
+  { he: 2 }
+);
+
+var partner3$ = dispatch(partner3);
+partner3$.subscribe(e => {
+  console.log("parnter3");
+  console.log(Background.blue, JSON.stringify(e));
+});
+
 partner1$.subscribe(e => {
   console.log("parnter1");
   console.log(Background.blue, JSON.stringify(e));
