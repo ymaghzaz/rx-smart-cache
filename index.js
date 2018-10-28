@@ -14,6 +14,7 @@ const Background = {
   red: "\x1b[41m"
 };
 const store = {};
+const bigStore = {};
 const notification = {};
 
 const getId = (obsId, params) => {
@@ -24,48 +25,31 @@ const dispatch = ({ resourceName: obsId, stream: obs, params }) => {
   const id = getId(obsId, params);
   if (!store[id]) {
     store[id] = obs;
+    bigStore[id] = { stream: obs, called: false };
     notification[id] = new BehaviorSubject({
       data: null,
       error: null,
       state: "Init"
     });
   }
-  return notification[id];
-};
+  return {
+    subscribe: call => {
+      if (!bigStore[id].called) {
+        console.log("called : obsId", obsId);
+        bigStore[id].called = true;
+        bigStore[id].unsubscribe = bigStore[id].stream.subscribe(info => {
+          notification[id].next({ data: info, state: "End" });
+        });
+      } else {
+        console.log("node called : obsId", obsId);
+      }
 
-const initStreamCache = () => {
-  const startSubscibtion = {};
-  const startProcessing$ = (key, obs) => {
-    return obs.pipe(
-      map(data => {
-        return { key, data };
-      })
-    );
+      return notification[id].subscribe(call);
+    },
+    unsubscribe: () => {
+      return bigStore[id].unsubscribe.unsubscribe();
+    }
   };
-  return of(store).pipe(
-    map(data => {
-      const keys = Object.keys(data);
-      let StreamToBeResolved = {};
-      keys.map(key => {
-        if (!startSubscibtion[key]) {
-          startSubscibtion[key] = true;
-          StreamToBeResolved[key] = startProcessing$(key, data[key]);
-        }
-      });
-      return StreamToBeResolved;
-    })
-  );
-};
-
-const callResources = dataStream$ => {
-  dataStream$.subscribe(datam => {
-    const keys = Object.keys(datam);
-    keys.map(key => {
-      datam[key].subscribe(info => {
-        notification[key].next({ data: info, state: "End" });
-      });
-    });
-  });
 };
 
 const rxRequest = (partnerFunction, partnerResource, params) => {
@@ -88,8 +72,6 @@ const buildPartnerRequest = (partnerFunction, resourceName, params) => {
 };
 
 module.exports = {
-  callResources,
-  initStreamCache,
   buildPartnerRequest,
   dispatch
 };
