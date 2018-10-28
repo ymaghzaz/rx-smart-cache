@@ -14,7 +14,7 @@ const Background = {
   red: "\x1b[41m"
 };
 const store = {};
-const bigStore = {};
+
 const notification = {};
 
 const getId = (obsId, params) => {
@@ -24,8 +24,7 @@ const getId = (obsId, params) => {
 const dispatch = ({ resourceName: obsId, stream: obs, params }) => {
   const id = getId(obsId, params);
   if (!store[id]) {
-    store[id] = obs;
-    bigStore[id] = { stream: obs, called: false };
+    store[id] = { stream: obs, called: false };
     notification[id] = new BehaviorSubject({
       data: null,
       error: null,
@@ -34,12 +33,18 @@ const dispatch = ({ resourceName: obsId, stream: obs, params }) => {
   }
   return {
     subscribe: call => {
-      if (!bigStore[id].called) {
+      if (!store[id].called) {
         console.log("called : obsId", obsId);
-        bigStore[id].called = true;
-        bigStore[id].unsubscribe = bigStore[id].stream.subscribe(info => {
-          notification[id].next({ data: info, state: "End" });
-        });
+        store[id].called = true;
+        store[id].unsubscribe = store[id].stream.subscribe(
+          info => {
+            notification[id].next({ data: info, state: "End" });
+          },
+          error => console.log("Error: ", error),
+          () => {
+            console.log("complete");
+          }
+        );
       } else {
         console.log("node called : obsId", obsId);
       }
@@ -47,7 +52,7 @@ const dispatch = ({ resourceName: obsId, stream: obs, params }) => {
       return notification[id].subscribe(call);
     },
     unsubscribe: () => {
-      return bigStore[id].unsubscribe.unsubscribe();
+      return store[id].unsubscribe.unsubscribe();
     }
   };
 };
