@@ -1,11 +1,6 @@
 var request = require("request");
 const { Observable } = require("rxjs");
-const {
-  callResources,
-  initStreamCache,
-  dispatch,
-  buildPartnerRequest
-} = require("./index");
+const { dispatch, buildPartnerRequest } = require("./index");
 const Background = {
   blue: "\x1b[44m%s\x1b[0m",
   yellow: "\x1b[33m%s\x1b[0m",
@@ -51,13 +46,10 @@ var duplicateCallPartner1$ = dispatch(partner1);
 
 var partner2$ = dispatch(partner2);
 
-const streamCache$ = initStreamCache();
-callResources(streamCache$);
-
 var partner3 = buildPartnerRequest(
   partnerRequest,
   "https://api.github.com/repos/ysfmag/amplify-js",
-  { he: 2 }
+  {}
 );
 
 var partner3$ = dispatch(partner3);
