@@ -11,7 +11,7 @@ const Background = {
   yellow: "\x1b[33m%s\x1b[0m"
 };
 const { map, filter, flatMap, mergeMap } = require("rxjs/operators");
-const { callResources, initStreamCache, dispatch } = require("./index");
+const { dispatch } = require("./index");
 const partner1 = params =>
   new Observable(obs => {
     console.log(
@@ -83,9 +83,6 @@ const p21 = dispatch({
   stream: partner2(1),
   params: 1
 });
-
-const streamCache$ = initStreamCache();
-callResources(streamCache$);
 
 const start = Date.now();
 p10.subscribe(res => {
