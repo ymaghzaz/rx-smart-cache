@@ -56,6 +56,21 @@ dispatch(partner1).subscribe(e => {
   console.log(Background.blue, JSON.stringify(e));
 });
 
+dispatch(partner1).then(e => {
+  console.log("parnter1  1 then function");
+  console.log(Background.red, JSON.stringify(e));
+});
+
+dispatch(partner1).then(e => {
+  console.log("parnter1  2 then function");
+  console.log(Background.red, JSON.stringify(e));
+});
+
+dispatch(partner1).then(e => {
+  console.log("parnter1 3 then function");
+  console.log(Background.red, JSON.stringify(e));
+});
+
 // dispatch(partner1).subscribe(e => {
 //   console.log(Background.blue, JSON.stringify(e));
 // });
