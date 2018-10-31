@@ -4,7 +4,7 @@
 
 Smart cache service for javascript.
 
-# Example Call Request Api
+# Example Api
 
 ```bash
 git clone https://github.com/ysfmag/rx-smart-cache.git
