@@ -1,6 +1,6 @@
 var request = require("request");
 const { Observable } = require("rxjs");
-const { dispatch, buildPartnerRequest } = require("./index");
+const { dispatch, buildPartnerRequest } = require("rx-cache");
 const Background = {
   blue: "\x1b[44m%s\x1b[0m",
   yellow: "\x1b[33m%s\x1b[0m",

@@ -314,6 +314,13 @@ request@^2.88.0:
     tunnel-agent "^0.6.0"
     uuid "^3.3.2"
 
+rx-cache@1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/rx-cache/-/rx-cache-1.0.0.tgz#b0c299a27a70b3ffbfdbe015eb9393707715470b"
+  dependencies:
+    crypto "^1.0.1"
+    rxjs "^6.3.3"
+
 rxjs@^6.3.3:
   version "6.3.3"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.3.3.tgz#3c6a7fa420e844a81390fb1158a9ec614f4bad55"
